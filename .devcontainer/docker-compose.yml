@@ -6,6 +6,12 @@ services:
     volumes:
       # Mount the root folder that contains .git
       - ..:/workspace:cached
+      # Use named volumes for build artifacts to avoid Windows filesystem permission issues
+      - node_modules:/workspace/node_modules
+      - next_build:/workspace/.next
+      - out_build:/workspace/out
+      # Note: .open-next is NOT mounted as a volume because OpenNext's build
+      # process uses fs.rmSync to clean the directory, which fails on mounted volumes
     # Override the workspace ownership in the container
     command: bash -c "sleep infinity"
     # Set environment variables
@@ -20,3 +26,8 @@ services:
       - '51204:51204'
     # Use the default shell
     user: vscode
+
+volumes:
+  node_modules:
+  next_build:
+  out_build:

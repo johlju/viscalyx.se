@@ -206,11 +206,14 @@
 
   // Use 'postCreateCommand' to run commands after the container is created
   // Do not use this git configuration command here, as it will prevent ssh-agent forwarding
-  "postCreateCommand": "sudo npm install -g npm@latest && npm install",
+  // Fix ownership for named volumes (created as root) and generated files before npm install
+  // Note: .open-next is not a named volume (OpenNext's build uses fs.rmSync which fails on mounted volumes)
+  "postCreateCommand": "sudo mkdir -p /workspace/node_modules /workspace/.next /workspace/out && sudo chown vscode:vscode /workspace/node_modules /workspace/.next /workspace/out && rm -f /workspace/cloudflare-env.d.ts && sudo npm install -g npm@latest && npm install",
 
   // Use 'postStartCommand' to run commands after the container starts and every time it starts
   // Unset the gpg.ssh.program for the vscode user so that SSH agent forwarding works correctly
-  "postStartCommand": "git config --global --unset gpg.ssh.program || true",
+  // Generate Cloudflare environment types for development
+  "postStartCommand": "git config --global --unset gpg.ssh.program || true && npm run cf-typegen",
 
   // Configure remote user
   "remoteUser": "vscode"

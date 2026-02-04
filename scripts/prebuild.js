@@ -23,14 +23,26 @@ const { execSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
-// Step 1: Clean Next.js build directories
+/**
+ * Helper function to clear directory contents without removing the directory itself.
+ * This is necessary when directories are Docker volume mount points.
+ * @param {string} dirPath - Path to the directory to clear
+ */
+function clearDirectoryContents(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    return
+  }
+  const items = fs.readdirSync(dirPath)
+  items.forEach(item => {
+    const itemPath = path.join(dirPath, item)
+    fs.rmSync(itemPath, { recursive: true, force: true })
+  })
+}
+
+// Step 1: Clean Next.js build directories (clear contents, not the directories themselves)
 console.log('🧹 Cleaning Next.js build artifacts...')
-if (fs.existsSync('.next')) {
-  fs.rmSync('.next', { recursive: true, force: true })
-}
-if (fs.existsSync('out')) {
-  fs.rmSync('out', { recursive: true, force: true })
-}
+clearDirectoryContents('.next')
+clearDirectoryContents('out')
 
 // Step 2 & 3: Handle OpenNext directory (if it exists)
 if (fs.existsSync('.open-next')) {
