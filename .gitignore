@@ -51,6 +51,7 @@ jspm_packages/
 # Next.js build output
 .next
 out
+next-env.d.ts
 
 # Cloudflare Workers build output
 .open-next
