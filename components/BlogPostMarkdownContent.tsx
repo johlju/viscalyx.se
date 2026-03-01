@@ -78,17 +78,13 @@ function sanitizeUrl(
   }
 }
 
+// NOTE: Individual attribute mappings (for→htmlFor, tabindex→tabIndex,
+// readonly→readOnly, srcset→srcSet, colspan→colSpan, rowspan→rowSpan,
+// crossorigin→crossOrigin, referrerpolicy→referrerPolicy, datetime→dateTime)
+// were removed because BLOG_MARKDOWN_SANITIZE_OPTIONS never allows those
+// attributes through, so they can never reach this function.
 function toReactAttributeName(attributeName: string): string {
   if (attributeName === 'class') return 'className'
-  if (attributeName === 'for') return 'htmlFor'
-  if (attributeName === 'tabindex') return 'tabIndex'
-  if (attributeName === 'readonly') return 'readOnly'
-  if (attributeName === 'srcset') return 'srcSet'
-  if (attributeName === 'colspan') return 'colSpan'
-  if (attributeName === 'rowspan') return 'rowSpan'
-  if (attributeName === 'crossorigin') return 'crossOrigin'
-  if (attributeName === 'referrerpolicy') return 'referrerPolicy'
-  if (attributeName === 'datetime') return 'dateTime'
   if (attributeName.startsWith('data-') || attributeName.startsWith('aria-')) {
     return attributeName
   }
@@ -132,13 +128,12 @@ function parseInlineStyle(styleText: string): CSSProperties {
 function mapElementAttributes(element: HTMLElement): Record<string, unknown> {
   const props: Record<string, unknown> = {}
 
+  // NOTE: An on* event-handler check (skip attributes starting with "on")
+  // was removed because sanitize-html already strips all event-handler
+  // attributes before they reach this function.
   for (const [attributeName, rawValue] of Object.entries(
     element.rawAttributes,
   ) as Array<[string, unknown]>) {
-    if (/^on/iu.test(attributeName)) {
-      continue
-    }
-
     const normalizedValue =
       typeof rawValue === 'string'
         ? rawValue
@@ -214,16 +209,12 @@ function renderNode(
     return node.text
   }
 
-  if (node.nodeType !== NodeType.ELEMENT_NODE) {
-    return null
-  }
-
+  // With comment: false in parse options, only TEXT_NODE and ELEMENT_NODE are
+  // produced. TEXT_NODE is handled above, so this is always an ELEMENT_NODE.
+  // Guards for non-ELEMENT nodeType and empty tagName were removed because
+  // node-html-parser (with comment: false) never produces such nodes.
   const element = node as HTMLElement
   const tagName = element.tagName.toLowerCase()
-
-  if (!tagName) {
-    return null
-  }
 
   const children = element.childNodes
     .map((child, index) => renderNode(child, `${keyPath}-${index}`, tagName))
