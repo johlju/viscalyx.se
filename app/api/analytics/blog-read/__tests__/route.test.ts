@@ -13,6 +13,7 @@ describe('blog-read analytics route', () => {
     vi.restoreAllMocks()
     vi.clearAllMocks()
     process.env.ANALYTICS_HASH_SECRET = 'test-secret'
+    delete process.env.STORE_HASHED_IP
     mockGetCloudflareContext.mockReturnValue({
       env: { viscalyx_se: { writeDataPoint: mockWriteDataPoint } },
     })
@@ -236,7 +237,7 @@ describe('blog-read analytics route', () => {
   })
 
   it('stores anonymous identifier when hashed IP storage is disabled', async () => {
-    // storeHashedIP is hard-coded to false in route.ts
+    // STORE_HASHED_IP defaults to unset (false) in test env
     const req = createRequest(
       { slug: 'my-post', category: 'automation', title: 'My Post' },
       { 'cf-connecting-ip': '203.0.113.10' },
@@ -261,8 +262,8 @@ describe('blog-read analytics route', () => {
   })
 
   it('does not attempt IP hashing when gate is disabled', async () => {
-    // storeHashedIP is hard-coded to false, so even without the
-    // secret the route should succeed without a hash warning.
+    // STORE_HASHED_IP is not set, so even without the secret the
+    // route should succeed without a hash warning.
     delete process.env.ANALYTICS_HASH_SECRET
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const req = createRequest(
@@ -309,5 +310,123 @@ describe('blog-read analytics route', () => {
 
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'Invalid JSON' })
+  })
+
+  it('treats whitespace-only string metrics as null', async () => {
+    const req = createRequest({
+      slug: 'my-post',
+      category: 'automation',
+      title: 'My Post',
+      readProgress: '   ',
+      timeSpent: '\t',
+    })
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[1]).toBe(0)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[2]).toBe(0)
+  })
+
+  it('treats NaN and Infinity metric values as null', async () => {
+    // Bypass JSON serialization (NaN/Infinity become null in JSON)
+    const req = {
+      headers: new Headers({ origin: 'https://viscalyx.org' }),
+      json: async () => ({
+        slug: 'my-post',
+        category: 'automation',
+        title: 'My Post',
+        readProgress: Number.NaN,
+        timeSpent: Number.POSITIVE_INFINITY,
+      }),
+    } as unknown as Request
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[1]).toBe(0)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[2]).toBe(0)
+  })
+
+  it('treats numeric strings that overflow to Infinity as null', async () => {
+    const req = createRequest({
+      slug: 'my-post',
+      category: 'automation',
+      title: 'My Post',
+      readProgress: '1e999',
+      timeSpent: '-1e999',
+    })
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[1]).toBe(0)
+    expect(mockWriteDataPoint.mock.calls[0][0].doubles[2]).toBe(0)
+  })
+
+  it('stores hashed IP when STORE_HASHED_IP is enabled', async () => {
+    process.env.STORE_HASHED_IP = 'true'
+    const req = createRequest(
+      { slug: 'my-post', category: 'automation', title: 'My Post' },
+      { 'cf-connecting-ip': '203.0.113.1' },
+    )
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    const stored = mockWriteDataPoint.mock.calls[0][0].blobs[6]
+    expect(stored).not.toBe('anonymous')
+    expect(stored).toMatch(/^[0-9a-f]{64}$/)
+  })
+
+  it('warns and falls back when hashIP fails due to missing secret', async () => {
+    process.env.STORE_HASHED_IP = 'true'
+    delete process.env.ANALYTICS_HASH_SECRET
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const req = createRequest(
+      { slug: 'my-post', category: 'automation', title: 'My Post' },
+      { 'cf-connecting-ip': '203.0.113.1' },
+    )
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Failed to hash client IP:',
+      expect.any(Error),
+    )
+    expect(mockWriteDataPoint.mock.calls[0][0].blobs[6]).toBe('anonymous')
+  })
+
+  it('returns 500 when an unexpected error occurs', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(crypto, 'randomUUID').mockImplementation(() => {
+      throw new Error('unexpected failure')
+    })
+    const req = createRequest({
+      slug: 'my-post',
+      category: 'automation',
+      title: 'My Post',
+    })
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(500)
+    expect(await res.json()).toEqual({ error: 'Failed to track blog read' })
+    expect(errorSpy).toHaveBeenCalled()
+  })
+})
+
+describe('SITE_URL module-level validation', () => {
+  it('throws when SITE_URL is not a valid URL', async () => {
+    vi.resetModules()
+    vi.doMock('@/lib/constants', () => ({ SITE_URL: 'not-a-url' }))
+    vi.doMock('@opennextjs/cloudflare', () => ({
+      getCloudflareContext: vi.fn(),
+    }))
+
+    await expect(
+      import('@/app/api/analytics/blog-read/route'),
+    ).rejects.toThrow('SITE_URL is not a valid URL')
   })
 })

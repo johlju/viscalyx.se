@@ -2,24 +2,26 @@
 
 > [!IMPORTANT]
 >
-> **Hashed IP storage is DISABLED.**
+> **Hashed IP storage is DISABLED in production.**
 >
-> The `storeHashedIP` gate in
-> `app/api/analytics/blog-read/route.ts` is set to `false`.
-> No pseudonymized visitor IDs are stored. All analytics data is
-> currently **fully anonymous** and falls outside GDPR scope.
+> Hashed IP storage is DISABLED by default. The `STORE_HASHED_IP`
+> environment variable controls whether pseudonymized visitor IDs are
+> stored. When unset or set to any value other than `"true"`, all analytics
+> data is **fully anonymous** and falls outside GDPR scope.
 > The hashing infrastructure is retained so it can be re-enabled
 > if unique-visitor counting is needed in the future. See the
 > "IP Hashing Mechanism" section below for technical details.
 >
 > **To re-enable**, make the following changes:
 >
-> 1. Set `const storeHashedIP = true` in
->    `app/api/analytics/blog-read/route.ts`
-> 2. Change `purposeKey` for the `cf-analytics` entry in
+> 1. Set the `STORE_HASHED_IP` environment variable to `"true"`
+>    (e.g. via Cloudflare Workers secrets or `.dev.vars`)
+> 2. Ensure `ANALYTICS_HASH_SECRET` is also set (required for
+>    HMAC-SHA-256 hashing)
+> 3. Change `purposeKey` for the `cf-analytics` entry in
 >    `lib/cookie-consent.ts` from `'cookies.cfAnalytics.purpose'`
 >    to `'cookies.cfAnalytics.purposeWithVisitorId'`
-> 3. Both translation keys already exist in `messages/en.json`
+> 4. Both translation keys already exist in `messages/en.json`
 >    and `messages/sv.json` under `cookieConsent.cookies.cfAnalytics`
 
 ## Overview

@@ -194,11 +194,11 @@ export async function POST(request: Request) {
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
       null
 
-    // Hard-coded gate: set to true to re-enable pseudonymized visitor
-    // ID storage (HMAC-SHA-256 hashed IP). Disabled to move analytics
-    // data from pseudonymized to fully anonymous under GDPR.
+    // Gate: set STORE_HASHED_IP=true to re-enable pseudonymized visitor
+    // ID storage (HMAC-SHA-256 hashed IP). Defaults to anonymous tracking
+    // (no IP data stored) for GDPR compliance.
     // See docs/analytics-privacy-design.md for rationale.
-    const storeHashedIP = false
+    const storeHashedIP = process.env.STORE_HASHED_IP === 'true'
 
     // Conditionally hash the client IP for pseudonymized visitor tracking.
     // When storeHashedIP is false (current default), hashedIP stays null
