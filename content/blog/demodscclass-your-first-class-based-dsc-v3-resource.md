@@ -229,7 +229,7 @@ DSC v3.
         $resultList = [System.Collections.Generic.List[DemoDscClass]]::new()
 
         1..3 | ForEach-Object -Process {
-            $obj = New-Object DemoDscClass
+            $obj = [DemoDscClass]::new()
             $obj.Key = 'Demo{0}' -f $_
             $obj.OptionalProperty = 'Value of OptionalProperty for Demo{0}' -f $_
 
@@ -298,7 +298,7 @@ class DemoDscClass {
         $resultList = [System.Collections.Generic.List[DemoDscClass]]::new()
 
         1..3 | ForEach-Object -Process { # In a real resource, return an array of actual resource instances
-            $obj = New-Object DemoDscClass
+            $obj = [DemoDscClass]::new()
             $obj.Key = 'Demo{0}' -f $_
             $obj.OptionalProperty = 'Value of OptionalProperty for Demo{0}' -f $_
 
