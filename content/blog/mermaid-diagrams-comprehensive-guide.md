@@ -1052,8 +1052,8 @@ Block diagrams show system components and their relationships.
 <!-- markdownlint-disable MD013 -->
 
 > [!WARNING]
-> These types of diagrams are not supported by the blog system yet, they throw
-> an error:
+> These types of diagrams are not yet supported by the blog system. They will
+> throw an error:
 >
 > ```plaintext
 > Converting circular structure to JSON --> starting at object with constructor 'HTMLHtmlElement' | property '__reactFiber$45ydlvxhz2f' -> object with constructor 'FiberNode' --- property 'stateNode' closes the circle
