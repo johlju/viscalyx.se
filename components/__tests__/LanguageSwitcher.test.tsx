@@ -120,7 +120,7 @@ describe('LanguageSwitcher component', () => {
       expect(screen.getByRole('listbox')).toBeInTheDocument()
     })
 
-    it('closes dropdown with Escape key', async () => {
+    it('closes dropdown with Escape key and returns focus to trigger', async () => {
       render(<LanguageSwitcher />)
       const toggleButton = screen.getByRole('button', {
         name: 'selectLanguage',
@@ -133,6 +133,7 @@ describe('LanguageSwitcher component', () => {
       // Close with Escape from the focused option
       fireEvent.keyDown(englishOption, { key: 'Escape' })
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+      expect(document.activeElement).toBe(toggleButton)
     })
 
     it('updates active option when ArrowDown is pressed', async () => {

@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/react'
 import type { Config } from 'dompurify'
 import { vi } from 'vitest'
-import MermaidRenderer from '../MermaidRenderer'
+import MermaidRenderer from '@/components/MermaidRenderer'
 
 // Mock DOMPurify
 vi.mock('dompurify', () => ({

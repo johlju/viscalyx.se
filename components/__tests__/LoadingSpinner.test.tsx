@@ -73,11 +73,15 @@ describe('LoadingSpinner', () => {
     })
 
     it('can be conditionally rendered based on loading state', () => {
+      const isLoading = true
       const { rerender } = render(
-        <div data-testid="container">{true && <LoadingSpinner />}</div>,
+        <div data-testid="container">{isLoading && <LoadingSpinner />}</div>,
       )
 
-      rerender(<div data-testid="container">{false && <LoadingSpinner />}</div>)
+      const isNotLoading = false
+      rerender(
+        <div data-testid="container">{isNotLoading && <LoadingSpinner />}</div>,
+      )
 
       expect(screen.queryByRole('status')).not.toBeInTheDocument()
     })

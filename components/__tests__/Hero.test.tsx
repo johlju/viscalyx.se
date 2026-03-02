@@ -94,6 +94,25 @@ describe('Hero component', () => {
     expect(activeDot).toHaveClass('bg-white', 'shadow-lg')
   })
 
+  it('exposes aria-pressed on the active indicator button', () => {
+    render(<Hero />)
+
+    const indicators = screen.getAllByRole('button', { name: /Show image/i })
+    expect(indicators).toHaveLength(4)
+
+    // First image is active by default
+    expect(indicators[0]).toHaveAttribute('aria-pressed', 'true')
+    expect(indicators[1]).toHaveAttribute('aria-pressed', 'false')
+    expect(indicators[2]).toHaveAttribute('aria-pressed', 'false')
+    expect(indicators[3]).toHaveAttribute('aria-pressed', 'false')
+
+    // Click the third indicator
+    fireEvent.click(indicators[2])
+
+    expect(indicators[0]).toHaveAttribute('aria-pressed', 'false')
+    expect(indicators[2]).toHaveAttribute('aria-pressed', 'true')
+  })
+
   it('shows image fallback UI when image loading fails', () => {
     render(<Hero />)
 
