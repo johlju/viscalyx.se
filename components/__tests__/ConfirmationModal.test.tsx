@@ -16,6 +16,7 @@ describe('ConfirmationModal', () => {
     message: 'Are you sure you want to proceed?',
     confirmText: 'Confirm',
     cancelText: 'Cancel',
+    closeAriaLabel: 'Close modal',
   }
 
   beforeEach(() => {
@@ -57,7 +58,7 @@ describe('ConfirmationModal', () => {
   it('calls onClose when close button (X) is clicked', () => {
     render(<ConfirmationModal {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText('closeAriaLabel'))
+    fireEvent.click(screen.getByLabelText('Close modal'))
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1)
   })
 

@@ -218,7 +218,7 @@ describe('ReadingProgress', () => {
       configurable: true,
     })
     Object.defineProperty(window, 'scrollY', {
-      value: 2199,
+      value: 2200,
       writable: true,
       configurable: true,
     })

@@ -4,6 +4,9 @@ import { POST } from '@/app/api/analytics/blog-read/route'
 const mockWriteDataPoint = vi.fn()
 const mockGetCloudflareContext = vi.fn()
 
+/** Index of the hashed-IP blob in the writeDataPoint blobs array (blob7). */
+const BLOB_INDEX_HASHED_IP = 6
+
 vi.mock('@opennextjs/cloudflare', () => ({
   getCloudflareContext: () => mockGetCloudflareContext(),
 }))
@@ -245,7 +248,8 @@ describe('blog-read analytics route', () => {
 
     await POST(req)
 
-    const stored = mockWriteDataPoint.mock.calls[0][0].blobs[6]
+    const stored =
+      mockWriteDataPoint.mock.calls[0][0].blobs[BLOB_INDEX_HASHED_IP]
     expect(stored).toBe('anonymous')
   })
 
@@ -258,7 +262,9 @@ describe('blog-read analytics route', () => {
 
     await POST(req)
 
-    expect(mockWriteDataPoint.mock.calls[0][0].blobs[6]).toBe('anonymous')
+    expect(
+      mockWriteDataPoint.mock.calls[0][0].blobs[BLOB_INDEX_HASHED_IP],
+    ).toBe('anonymous')
   })
 
   it('does not attempt IP hashing when gate is disabled', async () => {
@@ -275,7 +281,9 @@ describe('blog-read analytics route', () => {
 
     expect(res.status).toBe(200)
     expect(warnSpy).not.toHaveBeenCalled()
-    expect(mockWriteDataPoint.mock.calls[0][0].blobs[6]).toBe('anonymous')
+    expect(
+      mockWriteDataPoint.mock.calls[0][0].blobs[BLOB_INDEX_HASHED_IP],
+    ).toBe('anonymous')
   })
 
   it('continues when Cloudflare context retrieval fails', async () => {
@@ -374,7 +382,8 @@ describe('blog-read analytics route', () => {
     const res = await POST(req)
 
     expect(res.status).toBe(200)
-    const stored = mockWriteDataPoint.mock.calls[0][0].blobs[6]
+    const stored =
+      mockWriteDataPoint.mock.calls[0][0].blobs[BLOB_INDEX_HASHED_IP]
     expect(stored).not.toBe('anonymous')
     expect(stored).toMatch(/^[0-9a-f]{64}$/)
   })
@@ -395,7 +404,9 @@ describe('blog-read analytics route', () => {
       'Failed to hash client IP:',
       expect.any(Error),
     )
-    expect(mockWriteDataPoint.mock.calls[0][0].blobs[6]).toBe('anonymous')
+    expect(
+      mockWriteDataPoint.mock.calls[0][0].blobs[BLOB_INDEX_HASHED_IP],
+    ).toBe('anonymous')
   })
 
   it('returns 500 when an unexpected error occurs', async () => {
@@ -425,8 +436,8 @@ describe('SITE_URL module-level validation', () => {
       getCloudflareContext: vi.fn(),
     }))
 
-    await expect(
-      import('@/app/api/analytics/blog-read/route'),
-    ).rejects.toThrow('SITE_URL is not a valid URL')
+    await expect(import('@/app/api/analytics/blog-read/route')).rejects.toThrow(
+      'SITE_URL is not a valid URL',
+    )
   })
 })
