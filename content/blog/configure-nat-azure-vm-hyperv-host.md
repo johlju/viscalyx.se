@@ -204,8 +204,8 @@ subnet.
 > **Still stuck?**
 >
 > 1. Verify the host itself reaches Internet.
-> 2. Check Azure NSG outbound rules (default is _AllowAll_).
-> 3. Temporarily disable Windows Firewall in both host & guest (then
+> 1. Check Azure NSG outbound rules (default is _AllowAll_).
+> 1. Temporarily disable Windows Firewall in both host & guest (then
 >    re‑enable!).
 
 ## Quick “Reset & Rebuild” Script
