@@ -25,16 +25,7 @@ const TeamMemberClient = ({ member }: TeamMemberClientProps) => {
   const teamT = useTranslations('team')
   const locale = useLocale()
 
-  const hasSocialTranslationKey = (
-    socialName: string,
-  ): socialName is keyof typeof socialIconTranslationKeyMap =>
-    socialName in socialIconTranslationKeyMap
-
   const getSocialLinkText = (socialName: SocialIconName) => {
-    if (!hasSocialTranslationKey(socialName)) {
-      return socialName
-    }
-
     const socialKey = socialIconTranslationKeyMap[socialName]
     const translated = teamT(`socialLinks.${socialKey}`)
     return translated === `socialLinks.${socialKey}` ? socialName : translated
