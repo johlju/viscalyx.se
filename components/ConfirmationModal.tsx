@@ -127,7 +127,6 @@ const ConfirmationModal = ({
               className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full mx-auto pointer-events-auto"
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              onClick={event => event.stopPropagation()}
               ref={modalRef}
               role="dialog"
               tabIndex={-1}

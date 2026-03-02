@@ -5,13 +5,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { TocItem } from '@/lib/slug-utils-client'
 import { ChevronDownIcon, ChevronUpIcon } from './BlogIcons'
 
-interface TableOfContentsProps {
+interface ComponentProps {
   headingId?: string // ID of the heading element that labels this table of contents
   items: TocItem[]
   maxHeight?: 'sm' | 'lg' // sm for mobile (max-h-64), lg for desktop (max-h-80)
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({
+const TableOfContents: React.FC<ComponentProps> = ({
   items,
   maxHeight = 'lg',
   headingId,
