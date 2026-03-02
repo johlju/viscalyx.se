@@ -514,7 +514,7 @@ Describe 'DemoDscClass' {
 
 <!-- markdownlint-disable MD013 -->
 ```powershell
-Invoke-Pester -Script ./DemoDscClass.tests.ps1 -Output Detailed
+Invoke-Pester -Path ./DemoDscClass.tests.ps1 -Output Detailed
 ```
 <!-- markdownlint-enable MD013 -->
 
