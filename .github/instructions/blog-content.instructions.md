@@ -48,6 +48,9 @@ category: 'Any category — reuse existing ones when possible (e.g., DevOps, Pow
 
 Quote callout:
 
+Note: `[!QUOTE]` is a **repository-specific** callout convention, not a
+native GitHub alert type.
+
 ```markdown
 > [!QUOTE]
 > Quote text phrases from references
