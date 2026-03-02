@@ -68,7 +68,8 @@ for detailed instructions.
 | **System partition size** | 32 GB (absolute minimum) |
 <!-- markdownlint-enable MD013 -->
 
-Review the comprehensive [Hardware requirements for Windows Server](https://learn.microsoft.com/en-us/windows-server/get-started/hardware-requirements)
+Review the comprehensive
+[Hardware requirements for Windows Server](https://learn.microsoft.com/en-us/windows-server/get-started/hardware-requirements)
 documentation for complete details.
 
 ### Check Current Disk Size and free space
