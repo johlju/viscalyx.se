@@ -122,6 +122,8 @@ const CookieConsentBanner = () => {
       }
     }
 
+    let focusTimerId: ReturnType<typeof setTimeout> | undefined
+
     if (isVisible) {
       // Store the previously focused element only once when the banner first becomes visible
       if (!previousActiveElement.current) {
@@ -132,7 +134,7 @@ const CookieConsentBanner = () => {
       document.addEventListener('keydown', handleKeyDown)
 
       // Focus the first interactive element (Accept All button) for better UX
-      setTimeout(() => {
+      focusTimerId = setTimeout(() => {
         firstFocusableRef.current?.focus()
       }, 100)
     } else {
@@ -148,6 +150,7 @@ const CookieConsentBanner = () => {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
+      clearTimeout(focusTimerId)
     }
   }, [isVisible, showDetails, getFocusableElements])
 

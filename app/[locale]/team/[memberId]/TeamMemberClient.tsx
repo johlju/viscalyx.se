@@ -86,7 +86,7 @@ const TeamMemberClient = ({ member }: TeamMemberClientProps) => {
               transition={{ duration: 0.6 }}
             >
               <Link
-                className="inline-flex items-center text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 href={`/${locale}/team` as Route}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -156,7 +156,7 @@ const TeamMemberClient = ({ member }: TeamMemberClientProps) => {
                       return (
                         <motion.a
                           aria-label={socialLinkText}
-                          className="flex items-center space-x-2 px-4 py-3 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                          className="flex min-h-[44px] min-w-[44px] items-center space-x-2 px-4 py-3 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                           href={social.href}
                           key={`${social.name}-${social.href}`}
                           rel={

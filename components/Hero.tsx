@@ -139,7 +139,7 @@ const Hero = () => {
               transition={{ delay: 0.5 }}
             >
               <motion.button
-                className="btn-secondary inline-flex items-center justify-center"
+                className="btn-secondary inline-flex min-h-[44px] min-w-[44px] items-center justify-center"
                 onClick={() => handleNavigation('#about')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
