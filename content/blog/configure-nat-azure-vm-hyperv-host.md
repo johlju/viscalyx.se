@@ -89,7 +89,7 @@ flowchart TD
 | ⚠️ Security    | NAT hides guests from Azure’s NSG layer. Still apply guest firewalls/updates!   |
 <!-- markdownlint-enable MD013 -->
 
-## 1 . Create an Internal switch
+## 1. Create an Internal switch
 
 <!-- markdownlint-disable MD013 -->
 ```powershell
@@ -216,7 +216,6 @@ subnet.
 Remove-VMSwitch -Name VmNAT -Force -Confirm:$false
 Get-NetNat -Name VmNAT -ErrorAction SilentlyContinue | Remove-NetNat
 
-# Replace '<Host-NIC-Name>' with the name shown in Get-NetAdapter (e.g., 'Ethernet')
 New-VMSwitch -Name VmNAT -SwitchType Internal
 New-NetIPAddress -InterfaceAlias 'vEthernet (VmNAT)' `
                  -IPAddress 192.168.100.1 -PrefixLength 24
