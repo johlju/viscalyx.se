@@ -23,11 +23,7 @@ const Team = () => {
     if (translated !== 'viewProfile') {
       return translated
     }
-    const fallback = t('viewProfileFallback', { name })
-    if (fallback !== 'viewProfileFallback') {
-      return fallback
-    }
-    return `View profile of ${name}`
+    return t('viewProfileFallback', { name })
   }
 
   const hasSocialTranslationKey = (
