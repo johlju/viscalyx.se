@@ -65,6 +65,7 @@
     "sysdm",
     "workerd",
     "pipefail",
+    "Vitest",
 
     // PowerShell DSC specific
     "DSC",
