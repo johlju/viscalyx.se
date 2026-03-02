@@ -152,9 +152,9 @@ const TableOfContents: React.FC<ComponentProps> = ({
       const escapedId = CSS.escape(activeId)
       const activeButton = scrollContainerRef.current.querySelector(
         `button[data-id="${escapedId}"]`,
-      ) as HTMLElement
+      )
 
-      if (activeButton) {
+      if (activeButton instanceof HTMLElement) {
         const container = scrollContainerRef.current
         const containerRect = container.getBoundingClientRect()
         const buttonRect = activeButton.getBoundingClientRect()
