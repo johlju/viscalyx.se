@@ -156,24 +156,29 @@ export async function POST(request: Request) {
 
     const event = body as BlogReadEvent
     const {
-      slug,
-      category,
-      title,
+      slug: rawSlug,
+      category: rawCategory,
+      title: rawTitle,
       readProgress: rawReadProgress,
       timeSpent: rawTimeSpent,
     } = event
 
     // Validate required fields with runtime type checks
     if (
-      !isNonEmptyString(slug) ||
-      !isNonEmptyString(category) ||
-      !isNonEmptyString(title)
+      !isNonEmptyString(rawSlug) ||
+      !isNonEmptyString(rawCategory) ||
+      !isNonEmptyString(rawTitle)
     ) {
       return NextResponse.json(
         { error: 'Missing or invalid fields: slug, category, title' },
         { status: 400 },
       )
     }
+
+    // Normalize validated strings to avoid fragmented analytics
+    const slug = rawSlug.trim()
+    const category = rawCategory.trim()
+    const title = rawTitle.trim()
 
     const parsedReadProgress = parseFiniteMetric(rawReadProgress)
     const parsedTimeSpent = parseFiniteMetric(rawTimeSpent)
