@@ -449,15 +449,20 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-left: 0.5rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    margin-left: 0.25rem;
     vertical-align: middle;
     color: var(--color-gray-500);
     text-decoration: none;
     border-radius: 0.25rem;
     opacity: 0;
     transition: opacity 0.2s ease;
+  }
+
+  .heading-anchor svg {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   .heading-anchor:hover {
