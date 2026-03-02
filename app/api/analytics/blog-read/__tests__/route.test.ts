@@ -1,4 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import { POST } from '@/app/api/analytics/blog-read/route'
 
 const mockWriteDataPoint = vi.fn()
@@ -11,7 +19,18 @@ vi.mock('@opennextjs/cloudflare', () => ({
   getCloudflareContext: () => mockGetCloudflareContext(),
 }))
 
+/** Snapshot of process.env before the test suite runs. */
+const originalEnv = { ...process.env }
+
 describe('blog-read analytics route', () => {
+  beforeAll(() => {
+    // Snapshot saved in module scope above
+  })
+
+  afterAll(() => {
+    process.env = { ...originalEnv }
+  })
+
   beforeEach(() => {
     vi.restoreAllMocks()
     vi.clearAllMocks()

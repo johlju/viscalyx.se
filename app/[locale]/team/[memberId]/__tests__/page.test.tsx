@@ -46,11 +46,7 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/app/[locale]/team/[memberId]/TeamMemberClient', () => ({
   __esModule: true,
   default: ({ member }: { member: { name: string } }) =>
-    React.createElement(
-      'div',
-      { 'data-testid': 'team-member-client' },
-      member.name,
-    ),
+    React.createElement('article', { 'aria-label': member.name }, member.name),
 }))
 
 import { render, screen } from '@testing-library/react'
@@ -184,7 +180,9 @@ describe('TeamMemberPage', () => {
       const page = await TeamMemberPage({ params })
       render(page)
 
-      expect(screen.getByTestId('team-member-client')).toBeInTheDocument()
+      expect(
+        screen.getByRole('article', { name: 'Johan Ljunggren' }),
+      ).toBeInTheDocument()
       expect(screen.getByText('Johan Ljunggren')).toBeInTheDocument()
     })
 

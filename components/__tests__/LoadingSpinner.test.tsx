@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import type React from 'react'
 import { vi } from 'vitest'
 import LoadingSpinner from '../LoadingSpinner'
 
@@ -46,7 +47,10 @@ describe('LoadingSpinner', () => {
   })
 
   describe('color prop', () => {
-    test.each([
+    test.each<{
+      propColor: React.ComponentProps<typeof LoadingSpinner>['color']
+      expectedClass: string
+    }>([
       { propColor: undefined, expectedClass: 'text-primary-600' },
       { propColor: 'white', expectedClass: 'text-white' },
       { propColor: 'secondary', expectedClass: 'text-secondary-600' },
@@ -54,7 +58,7 @@ describe('LoadingSpinner', () => {
       propColor,
       expectedClass,
     }) => {
-      const props: Record<string, unknown> = {}
+      const props: Partial<React.ComponentProps<typeof LoadingSpinner>> = {}
       if (propColor) props.color = propColor
       render(<LoadingSpinner {...props} />)
       const spinner = screen.getByRole('status')

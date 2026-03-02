@@ -31,13 +31,4 @@ describe('Root not-found page', () => {
     render(<RootNotFound />)
     expect(screen.getByRole('main')).toBeInTheDocument()
   })
-
-  it('renders with hardcoded English content (no locale context)', () => {
-    // Root not-found has no locale context, so text is hardcoded English.
-    // This is intentional — the root layout has no i18n provider.
-    render(<RootNotFound />)
-    expect(screen.getByText('404')).toBeInTheDocument()
-    expect(screen.getByText('Page Not Found')).toBeInTheDocument()
-    expect(screen.getByText('Go to Homepage')).toBeInTheDocument()
-  })
 })

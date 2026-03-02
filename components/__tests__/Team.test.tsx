@@ -51,7 +51,7 @@ vi.mock('lucide-react', () => ({
     <svg className={className} data-testid="arrow-right-icon" />
   ),
   Camera: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="camera-icon" />
+    <svg aria-label="Camera" className={className} role="img" />
   ),
   MapPin: ({ className }: { className?: string }) => (
     <svg className={className} data-testid="map-pin-icon" />
@@ -227,7 +227,7 @@ describe('Team', () => {
     render(<Team />)
 
     expect(screen.queryByAltText('Johan Ljunggren')).not.toBeInTheDocument()
-    expect(screen.getByTestId('camera-icon')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /camera/i })).toBeInTheDocument()
   })
 
   it('stops propagation on social link clicks', () => {
