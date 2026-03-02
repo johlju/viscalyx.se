@@ -53,8 +53,10 @@ We require WinGet 1.11.400 or newer, but Windows Server 2025 comes with an
 older version. Install or upgrade WinGet by following
 [installing WinGet](https://github.com/microsoft/winget-cli?tab=readme-ov-file#installing-the-client).
 
-If you download WinGet from [winget-cli releases](https://github.com/microsoft/winget-cli/releases),
-download the matching dependencies package for that release as well. Installing
+If you download WinGet from
+[winget-cli releases](https://github.com/microsoft/winget-cli/releases),
+download the matching dependencies package for that release
+as well. Installing
 those dependencies is recommended, but might not be required in every
 environment; if setup fails without them, install dependencies and retry, or
 verify WinGet installs and runs successfully when dependencies are skipped.
